@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gemini Local Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            background-color: #fdfdfd;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007acc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #005f99;
+        }
+
+        #response {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #007acc;
+            border-radius: 5px;
+            font-size: 16px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            color: #222;
+        }
+    </style>
+</head>
+<body>
+    <h2>Ask Gemini</h2>
+
+    <input type="text" id="prompt" placeholder="Enter your question here">
+    <button onclick="askGemini()">Submit</button>
+
+    <div id="response"></div>
+
+    <script>
+        async function askGemini() {
+            const prompt = document.getElementById("prompt").value;
+            const resDiv = document.getElementById("response");
+            resDiv.textContent = "Loading...";
+
+            try {
+                const res = await fetch("/ask", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ prompt })
+                });
+
+                const data = await res.json();
+                resDiv.textContent = data.response || data.error || "No response received.";
+            } catch (err) {
+                resDiv.textContent = "Error: " + err.message;
+            }
+        }
+    </script>
+</body>
+</html>
